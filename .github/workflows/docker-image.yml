@@ -15,4 +15,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag fastapi_poc:$(date +%s)
+      run: export IMAGE="$DOCKER_USER/fastapi_poc:$(date +%s)" && \
+           docker build . --file Dockerfile --tag $IMAGE && \
+           docker login --username $DOCKER_USER --password=$(echo $DOCKER_PASSWORD | base64 -d) && \
+           docker push $IMAGE
+      
